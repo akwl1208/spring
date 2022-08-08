@@ -6,4 +6,13 @@
 	<select id="selectEmail" resultType="String">
 	    select me_email from member where me_id = #{me_id}
 	</select>
+	
+  	<select id="selectMember" resultType="kr.green.springtest.vo.MemberVO">
+		select * from member where me_id = #{me_id}
+	</select>
+	
+	<insert id="insertMember">
+		insert into member(me_id, me_pw, me_email, me_birth, me_gender, me_authority)
+	  	values(#{member.me_id},#{member.me_pw},#{member.me_email},#{member.me_birth},#{member.me_gender},1)
+	</insert>
 </mapper>
