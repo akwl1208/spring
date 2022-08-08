@@ -2,9 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <div class="container">
-	<h1>
-		Hello world!  
-	</h1>
-	<P> ${setHeader}.</P>
+	아이디 : ${user.me_id} <br>
+	이메일 : ${user.me_email} <br>
+	생년월일 : ${user.me_birth}
 </div>
 

@@ -21,7 +21,7 @@ public class HomeController {
 
 	    return mv;
 	}
-
+	// 회원가입
 	@RequestMapping(value="/signup", method=RequestMethod.GET)
 	public ModelAndView signupGet(ModelAndView mv){
 	    mv.setViewName("/main/signup");
@@ -36,6 +36,24 @@ public class HomeController {
 				mv.setViewName("redirect:/signup");
 			}
 	    return mv;
+	}
+	//로그인
+	@RequestMapping(value="/login", method=RequestMethod.GET)
+	public ModelAndView loginGet(ModelAndView mv){
+	    mv.setViewName("/main/login");
+	    return mv;
+	}
+	
+	@RequestMapping(value= "/login", method=RequestMethod.POST)
+	public ModelAndView loginPost(ModelAndView mv, MemberVO member){
+		MemberVO dbMember = memberService.login(member);
+		mv.addObject("user", dbMember);
+		if(dbMember != null) {
+			mv.setViewName("redirect:/");
+		}else {
+			mv.setViewName("redirect:/login");
+		}
+		return mv;
 	}
 	
 }
