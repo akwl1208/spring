@@ -18,7 +18,6 @@ public class HomeController {
 	@RequestMapping(value= {"/"})
 	public ModelAndView home(ModelAndView mv, MemberVO member){
 	    mv.setViewName("/main/home");
-
 	    return mv;
 	}
 	// 회원가입
@@ -46,13 +45,12 @@ public class HomeController {
 	
 	@RequestMapping(value= "/login", method=RequestMethod.POST)
 	public ModelAndView loginPost(ModelAndView mv, MemberVO member){
-		MemberVO dbMember = memberService.login(member);
-		mv.addObject("user", dbMember);
-		if(dbMember != null) {
+		MemberVO dbMember = memberService.login(member);		
+		if(dbMember != null)
 			mv.setViewName("redirect:/");
-		}else {
+		else
 			mv.setViewName("redirect:/login");
-		}
+		mv.addObject("user", dbMember);
 		return mv;
 	}
 	

@@ -13,11 +13,6 @@ public class MemberServiceImp implements MemberService{
 	MemberDAO memberDao;
 
 	@Override
-	public String getEmail(String me_id) {
-		return memberDao.selectEmail(me_id);
-	}
-
-	@Override
 	public boolean signup(MemberVO member) {
 		//유효성 검사
 		if(member == null)
