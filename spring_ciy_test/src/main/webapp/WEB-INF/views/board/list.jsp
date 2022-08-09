@@ -8,7 +8,7 @@
 <title>게시글</title>
 </head>
 <body>
-	<div class=container>
+	<div class="container mt-5" >
 		<h1>게시글</h1>
 		<table class="table table-striped table-hover">
 		    <thead>
@@ -26,7 +26,7 @@
 		      	  <tr>
 			        <td>${board.bd_num}</td>
 			        <td>
-			        	<a href='<c:url value="/board/select/${board.bd_num}"></c:url>'>${board.bd_title}</a>
+			        	<a href="<c:url value="/board/select/${board.bd_num}"></c:url>">${board.bd_title}</a>
 			        </td>
 			        <td>${board.bd_me_id}</td>
 			        <td>${board.bd_reg_date_str}</td>
@@ -35,7 +35,10 @@
 			      </tr>
 		      </c:forEach>
 		    </tbody>
-		</table> 
+		</table>
+		<c:if test="${user != null}">
+			<a href="<c:url value="/board/insert"></c:url>" class="btn btn-outline-primary mb-5">글쓰기</a> 
+		</c:if>
 	</div>
 </body>
 </html>

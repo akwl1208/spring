@@ -3,6 +3,7 @@ package kr.green.springtest.service;
 import java.util.ArrayList;
 
 import kr.green.springtest.vo.BoardVO;
+import kr.green.springtest.vo.MemberVO;
 
 public interface BoardService {
 
@@ -11,5 +12,7 @@ public interface BoardService {
 	BoardVO getBoard(int bd_num);
 
 	void updateView(int bd_num);
+
+	void insertBoard(BoardVO board, MemberVO user);
 
 }
