@@ -25,7 +25,8 @@
 	
 	<update id="updateBoard">
 		update board
-			set bd_title = #{board.bd_title}, bd_content = #{board.bd_content}, bd_up_date = now()
+			set bd_title = #{board.bd_title}, bd_content = #{board.bd_content}, bd_up_date = now(), bd_del = #{board.bd_del}
 			where bd_num = #{board.bd_num}
 	</update>
+	
 </mapper>

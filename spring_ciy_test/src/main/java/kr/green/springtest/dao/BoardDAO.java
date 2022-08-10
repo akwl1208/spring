@@ -18,6 +18,4 @@ public interface BoardDAO {
 
 	void updateBoard(@Param("board")BoardVO board);
 
-
-
 }
