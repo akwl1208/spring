@@ -53,4 +53,22 @@ public class BoardController {
     return mv;
 	}
 	
+	@RequestMapping(value="/board/update/{bd_num}",method=RequestMethod.GET)
+	public ModelAndView boardUpdateGet(ModelAndView mv,
+			@PathVariable("bd_num")int bd_num){
+		BoardVO board = boardService.getBoard(bd_num);
+		mv.addObject("board", board);
+    mv.setViewName("/board/update");
+    return mv;
+	}
+	
+	@RequestMapping(value="/board/update/{bd_num}",method=RequestMethod.POST)
+	public ModelAndView boardUpdatePost(ModelAndView mv,
+			@PathVariable("bd_num")int bd_num, HttpSession session, BoardVO board){
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		boardService.updateBoard(board,user);
+    mv.setViewName("redirect:/board/select/"+bd_num);
+    return mv;
+	}
+	
 }
