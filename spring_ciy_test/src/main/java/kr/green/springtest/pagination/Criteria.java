@@ -6,10 +6,14 @@ import lombok.Data;
 public class Criteria {
 	private int page; 
 	private int perPageNum;
+	private String searchType;
+	private String search;
 	
 	public Criteria() {
 		this.page = 1;
 		this.perPageNum = 10;
+		this.search = "";
+		this.searchType = "all";
 	}
 	
 	public int getPageStart() {

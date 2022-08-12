@@ -18,6 +18,8 @@ public class BoardServiceImp implements BoardService{
 
 	@Override
 	public ArrayList<BoardVO> getBoardList(Criteria cri) {
+		if(cri == null)
+			return null;
 		return boardDao.selectBoardList(cri);
 	}
 
@@ -79,8 +81,10 @@ public class BoardServiceImp implements BoardService{
 	}
 
 	@Override
-	public int getTotalCount() {
-		return boardDao.selectTotalCount();
+	public int getTotalCount(Criteria cri) {
+		if(cri == null)
+			return 0;
+		return boardDao.selectTotalCount(cri);
 	}
 
 

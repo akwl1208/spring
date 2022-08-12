@@ -10,6 +10,15 @@
 <body>
 	<div class="container mt-5" >
 		<h1>게시글</h1>
+	  <form class="input-group">
+	  	<select class="input-group-prepend form-control col-2" name="searchType">
+		    <option value="all" <c:if test="${pm.cri.searchType == 'all'}">selected</c:if>>전체</option>
+		    <option value="bd_title" <c:if test="${pm.cri.searchType == 'bd_title'}">selected</c:if>>제목</option>
+		    <option value="bd_me_id" <c:if test="${pm.cri.searchType == 'bd_me_id'}">selected</c:if>>작성자</option>
+	  	</select>
+	    <input type="text" class="form-control col-8" name="search" value="${pm.cri.search}">
+	    <button class="btn btn-outline-info col-2">검색</button>
+	  </form>
 		<table class="table table-striped table-hover">
 		    <thead>
 		      <tr>
@@ -38,15 +47,15 @@
 		</table>
 	  <ul class="pagination justify-content-center">
 	  	<c:if test="${pm.prev}">
-	  		 <li class="page-item"><a class="page-link" href="<c:url value="/board/list?page=${pm.startPage-1}"></c:url>">이전</a></li>
+	  		 <li class="page-item"><a class="page-link" href="<c:url value="/board/list?page=${pm.startPage-1}&searchType=${pm.cri.searchType}&search=${pm.cri.search}"></c:url>">이전</a></li>
 	  	</c:if>
 	   	<c:forEach begin="${pm.startPage}" end="${pm.endPage}" var="i">
 		  	<li class="page-item <c:if test="${i == pm.cri.page}">active</c:if>">
-		  		<a class="page-link" href="<c:url value="/board/list?page=${i}"></c:url>">${i}</a>
+		  		<a class="page-link" href="<c:url value="/board/list?page=${i}&searchType=${pm.cri.searchType}&search=${pm.cri.search}"></c:url>">${i}</a>
 		  	</li>
 		  </c:forEach>
    	  <c:if test="${pm.next}">
-		  	<li class="page-item"><a class="page-link" href="<c:url value="/board/list?page=${pm.endPage+1}"></c:url>">다음</a></li>
+		  	<li class="page-item"><a class="page-link" href="<c:url value="/board/list?page=${pm.endPage+1}&searchType=${pm.cri.searchType}&search=${pm.cri.search}"></c:url>">다음</a></li>
 		  </c:if>
 	  </ul>
 		<c:if test="${user != null}">

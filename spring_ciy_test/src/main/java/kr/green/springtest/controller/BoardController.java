@@ -25,7 +25,7 @@ public class BoardController {
 	
 	@RequestMapping(value="/board/list", method=RequestMethod.GET)
 	public ModelAndView boardListGet(ModelAndView mv, Criteria cri){
-		int totalCount = boardService.getTotalCount();
+		int totalCount = boardService.getTotalCount(cri);
 		cri.setPerPageNum(3);
 		
 		ArrayList<BoardVO> list = boardService.getBoardList(cri);
