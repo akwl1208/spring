@@ -45,7 +45,14 @@
 			<c:if test="${user != null && user.me_id == board.bd_me_id}">
 				<a href="<c:url value="/board/update/${board.bd_num}"></c:url>" class="btn btn-outline-info">수정</a>
 				<a href="<c:url value="/board/delete/${board.bd_num}"></c:url>" class="btn btn-outline-danger">삭제</a>
-			</c:if>	
+			</c:if>
+			<hr>
+			<div>
+				<div class="form-group">
+					<textarea class="form-control" rows="5" name="co_content"></textarea>
+					<button class="btn btn-outline-info col-12 btn-co-insert">댓글등록</button>
+				</div>
+			</div>
 		</c:if>
 		<c:if test="${board.bd_del == 'Y'}">
 			<h1>작성자에 의해 삭제된 게시글입니다</h1>
@@ -56,6 +63,7 @@
 	</div>
 		<script>
 		$(function(){
+			//추천/비추천 버튼 클릭
 			$('.btn-up, .btn-down').click(function(){
 				let id = '${user.me_id}';
 				if(id ==''){
@@ -96,6 +104,67 @@
 				});
 			})
 		})
+		
+		//댓글
+		$(function(){
+			//댓글 등록 버튼 클릭
+			$('.btn-co-insert').click(function(){
+				let co_me_id = '${user.me_id}';
+				//아이디 확인
+				if(co_me_id == ''){
+					//로그인 화면으로 이동할지 물어보고
+					if(confirm('로그인한 회원만 댓글 작성이 가능합니다. 로그인하겠습니까?')){
+						//로그인화면으로 이동
+						location.href = '<%=request.getContextPath()%>/login'
+					}else{
+						return;
+					}
+				}
+				//댓글 내용 확인				
+				let co_bd_num = '${board.bd_num}';
+				let co_content = $('[name=co_content]').val();
+				//댓글 내용이 없으면 입력하라고 알려줌
+				if(co_content.trim().length == 0){
+					alert('내용을 입력하세요')
+					$('[name=co_content]').focus();
+					return;					
+				}
+				let obj = {
+					co_content,
+					co_bd_num : '${board.bd_num}'
+				}
+				ajaxPost(false, obj, '/ajax/comment/insert', commentInsertSuccess)
+			})
+		})
+		function commentInsertSuccess(data){
+			if(data.res)
+				alert('댓글을 등록했습니다');
+			else
+				alert('댓글 등록에 실패했습니다');
+		}
+		function commentListSuccess(data){
+			console.log(data)
+		}
+		function commentUpdateSuccess(data){
+			console.log(data)
+		}
+		function commentDeleteSuccess(data){
+			console.log(data)
+		}
+		
+		//ajaxPost
+		function ajaxPost(async, dataObj, url, success){
+			$.ajax({
+        async: async,
+        type:'POST',
+        data: JSON.stringify(dataObj),
+        url: "<%=request.getContextPath()%>" + url,
+        contentType:"application/json; charset=UTF-8",
+        success : function(data){
+					success(data)
+        }
+			});
+		}
 	</script>
 </body>
 </html>

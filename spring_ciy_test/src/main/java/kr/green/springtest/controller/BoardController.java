@@ -19,6 +19,7 @@ import kr.green.springtest.pagination.Criteria;
 import kr.green.springtest.pagination.PageMaker;
 import kr.green.springtest.service.BoardService;
 import kr.green.springtest.vo.BoardVO;
+import kr.green.springtest.vo.CommentVO;
 import kr.green.springtest.vo.LikesVO;
 import kr.green.springtest.vo.MemberVO;
 
@@ -31,7 +32,7 @@ public class BoardController {
 	@RequestMapping(value="/board/list", method=RequestMethod.GET)
 	public ModelAndView boardListGet(ModelAndView mv, Criteria cri){
 		int totalCount = boardService.getTotalCount(cri);
-		cri.setPerPageNum(3);
+		cri.setPerPageNum(10);
 		
 		ArrayList<BoardVO> list = boardService.getBoardList(cri);
 		PageMaker pm = new PageMaker(totalCount, 4, cri);
@@ -103,9 +104,20 @@ public class BoardController {
 	public Map<Object, Object> checkLikes(@RequestBody LikesVO likes, HttpSession session){
     HashMap<Object, Object> map = new HashMap<Object, Object>();
     MemberVO user = (MemberVO)session.getAttribute("user");
-    //state : 1, -1f , l0, -10
+    //state : 1, -1 , l0, -10
     String state = boardService.getLikesState(likes, user);
     map.put("state", state);
+    return map;
+	}
+	
+	@RequestMapping(value="/ajax/comment/insert")
+	@ResponseBody
+	public Map<Object, Object> ajaxCommentInsert(@RequestBody CommentVO comment, HttpSession session){
+    HashMap<Object, Object> map = new HashMap<Object, Object>();
+  	MemberVO user = (MemberVO)session.getAttribute("user");
+  	boolean res = boardService.insertComment(comment,user);
+    
+  	map.put("res", res);
     return map;
 	}
 }
