@@ -130,11 +130,11 @@
 					$('[name=co_content]').focus();
 					return;					
 				}
-				let obj = {
+				let comment = {
 					co_content,
 					co_bd_num : '${board.bd_num}'
 				}
-				ajaxPost(false, obj, '/ajax/comment/insert', commentInsertSuccess)
+				ajaxPost(false, comment, '/ajax/comment/insert', commentInsertSuccess);
 			})
 			getCommentList(cri);
 		})//
@@ -168,19 +168,35 @@
 		function commentListSuccess(data){
 			let list = data.list;
 			let str = '';
+			//반복문을 이용해 댓글 구성
 			for(co of list){
 				str += '<div class="media border p-3">';
 				str += 	 '<div class="media-body">';
 				str +=     '<h5>'+ co.co_me_id + '<small><i>' + co.co_reg_date_str + '</i></small></h5>';
 				str +=     '<p>'+ co.co_content +'</p>';      
 				str +=   '</div>';
-				str += '</div>';		
+				str +=   '<div class="btn-box">';
+				if(co.co_me_id == '${user.me_id}'){
+					str += 	 '<button class="btn btn-outline-success btn-co-update" style="display:block">수정</button>';
+					str +=   '<button data-target="'+co.co_num+'" class="btn btn-outline-danger btn-co-delete mt-1" style="display:block">삭제</button>';
+				}
+				str +=   '</div>'
+				str += '</div>';	
 			}
+			//댓글 화면에 출력
 			$('.list-comment').html(str);
 			
-			//페이지네이션
+			//댓글 삭제 이벤트
+			$('.btn-co-delete').click(function(){
+				let co_num = $(this).data('target');
+				let comment = {co_num};
+				ajaxPost(false, comment, '/ajax/comment/delete', commentDeleteSuccess);
+			})
+			
+			//댓글 페이지네이션
 			let pm = data.pm;
 			let pmStr = '';
+			//댓글 페이지네이션 구성
 			if(pm.prev){
 				pmStr += '<li class="page-item" data-page="'+ (pm.startPage-1)+'">';
 				pmStr +=	'<a class="page-link" href="javascript:0;">이전</a>';
@@ -202,7 +218,9 @@
 				pmStr += 	'<a class="page-link" href="javascript:0;">다음</a>';
 				pmStr += '</li>';
 			}
+			//댓글 페이지네이션 화면에 출력
 			$('.pagination-comment').html(pmStr);
+			//페이지네이션에서 페이지 이동 이벤트
 			$('.pagination-comment .page-item').click(function(){
 				cri.page = $(this).data('page');
 				getCommentList(cri);
