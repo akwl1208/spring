@@ -47,12 +47,12 @@
 				<a href="<c:url value="/board/delete/${board.bd_num}"></c:url>" class="btn btn-outline-danger">삭제</a>
 			</c:if>
 			<hr>
-			<div>
-				<div class="form-group">
-					<textarea class="form-control" rows="5" name="co_content"></textarea>
-					<button class="btn btn-outline-info col-12 btn-co-insert">댓글등록</button>
-				</div>
+			<div class="form-group">
+				<textarea class="form-control" rows="5" name="co_content"></textarea>
+				<button class="btn btn-outline-info col-12 btn-co-insert">댓글등록</button>
 			</div>
+			<div class="list-comment"></div>
+		  <ul class="pagination-comment pagination justify-content-center mt-3"></ul>
 		</c:if>
 		<c:if test="${board.bd_del == 'Y'}">
 			<h1>작성자에 의해 삭제된 게시글입니다</h1>
@@ -115,7 +115,8 @@
 					//로그인 화면으로 이동할지 물어보고
 					if(confirm('로그인한 회원만 댓글 작성이 가능합니다. 로그인하겠습니까?')){
 						//로그인화면으로 이동
-						location.href = '<%=request.getContextPath()%>/login'
+						location.href = '<%=request.getContextPath()%>/login';
+						return;
 					}else{
 						return;
 					}
@@ -135,22 +136,84 @@
 				}
 				ajaxPost(false, obj, '/ajax/comment/insert', commentInsertSuccess)
 			})
-		})
+			getCommentList(cri);
+		})//
+		
+		//전역변수
+		let cri = {
+			page : 1,
+			perPageNum : 5
+		}
+		
+		//함수
+		//댓글리스트 가져오기
+		function getCommentList(cri){
+			if(cri == undefined || cri == null || typeof cri != 'object'){
+				cri = {};
+			}
+			if(isNaN(cri.page))
+				cri.page = 1;
+			
+			ajaxPost(false, cri, '/ajax/comment/list/'+${board.bd_num}, commentListSuccess);
+		}//
+		
 		function commentInsertSuccess(data){
 			if(data.res)
 				alert('댓글을 등록했습니다');
 			else
 				alert('댓글 등록에 실패했습니다');
-		}
+			getCommentList(cri);
+			$('[name=co_content]').val('');
+		}//
 		function commentListSuccess(data){
-			console.log(data)
-		}
+			let list = data.list;
+			let str = '';
+			for(co of list){
+				str += '<div class="media border p-3">';
+				str += 	 '<div class="media-body">';
+				str +=     '<h5>'+ co.co_me_id + '<small><i>' + co.co_reg_date_str + '</i></small></h5>';
+				str +=     '<p>'+ co.co_content +'</p>';      
+				str +=   '</div>';
+				str += '</div>';		
+			}
+			$('.list-comment').html(str);
+			
+			//페이지네이션
+			let pm = data.pm;
+			let pmStr = '';
+			if(pm.prev){
+				pmStr += '<li class="page-item" data-page="'+ (pm.startPage-1)+'">';
+				pmStr +=	'<a class="page-link" href="javascript:0;">이전</a>';
+				pmStr += '</li>';
+			}
+			for(let i = pm.startPage; i<=pm.endPage; i++){
+				if(i == pm.cri.page){
+					pmStr += '<li class="page-item active" data-page="'+ i +'">';
+					pmStr +=	'<a class="page-link" href="javascript:0;">' + i + '</a>';
+					pmStr += '</li>';	
+				}else{
+					pmStr += '<li class="page-item" data-page="'+ i +'">';
+					pmStr +=	'<a class="page-link" href="javascript:0;">' + i + '</a>';
+					pmStr += '</li>';
+				}
+			}	    			
+			if(pm.next){
+				pmStr += '<li class="page-item" data-page="'+ (pm.endPage+1) +'">';
+				pmStr += 	'<a class="page-link" href="javascript:0;">다음</a>';
+				pmStr += '</li>';
+			}
+			$('.pagination-comment').html(pmStr);
+			$('.pagination-comment .page-item').click(function(){
+				cri.page = $(this).data('page');
+				getCommentList(cri);
+			})
+		}//
 		function commentUpdateSuccess(data){
 			console.log(data)
-		}
+		}//
 		function commentDeleteSuccess(data){
 			console.log(data)
-		}
+		}//
 		
 		//ajaxPost
 		function ajaxPost(async, dataObj, url, success){
@@ -164,7 +227,7 @@
 					success(data)
         }
 			});
-		}
+		}//
 	</script>
 </body>
 </html>

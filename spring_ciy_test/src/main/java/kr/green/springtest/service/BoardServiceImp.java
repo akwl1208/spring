@@ -138,6 +138,24 @@ public class BoardServiceImp implements BoardService{
 		return true;
 	}
 
+	@Override
+	public ArrayList<CommentVO> getCommentList(Criteria cri, int bd_num) {
+		if(cri == null)
+			return null;
+		
+		BoardVO dbBoard = boardDao.selectBoard(bd_num);
+		if(dbBoard == null || !dbBoard.getBd_del().equals("N"))
+			return null;
+		
+		return boardDao.selectCommentList(cri, bd_num);
+	}
 
+	@Override
+	public int getCommentTotalCount(int bd_num) {
+		BoardVO dbBoard = boardDao.selectBoard(bd_num);
+		if(dbBoard == null || !dbBoard.getBd_del().equals("N"))
+			return 0;
+		return boardDao.selectTotalComment(bd_num);
+	}
 
 }

@@ -8,7 +8,6 @@ import kr.green.springtest.pagination.Criteria;
 import kr.green.springtest.vo.BoardVO;
 import kr.green.springtest.vo.CommentVO;
 import kr.green.springtest.vo.LikesVO;
-import kr.green.springtest.vo.MemberVO;
 
 public interface BoardDAO {
 
@@ -34,5 +33,7 @@ public interface BoardDAO {
 
 	void insertComment(@Param("co")CommentVO comment);
 
+	ArrayList<CommentVO> selectCommentList(@Param("cri")Criteria cri, @Param("bd_num")int bd_num);
 
+	int selectTotalComment(@Param("bd_num")int bd_num);
 }
