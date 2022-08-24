@@ -27,9 +27,9 @@
 			where bd_num = #{bd_num} and bd_del = 'N'
 	</update>
 	
-	<insert id="insertBoard">
+	<insert id="insertBoard" useGeneratedKeys="true" keyProperty="board.bd_num">
 		insert into board(bd_title, bd_content, bd_me_id, bd_ori_num, bd_depth)
-		select #{board.bd_title}, #{board.bd_content}, #{board.bd_me_id}, ifnull(max(bd_num),0) + 1, 1 from board;
+			select #{board.bd_title}, #{board.bd_content}, #{board.bd_me_id}, ifnull(max(bd_num),0) + 1, 1 from board;
 	</insert>
 	
 	<update id="updateBoard">
@@ -99,4 +99,9 @@
 			set co_content = #{co.co_content}
 			where co_num = #{co.co_num}
 	</update>
+	
+	<insert id="insertFile">
+		insert into file(fi_name, fi_ori_name, fi_bd_num)
+			values(#{fi.fi_name},#{fi.fi_ori_name},#{fi.fi_bd_num})
+	</insert>
 </mapper>
