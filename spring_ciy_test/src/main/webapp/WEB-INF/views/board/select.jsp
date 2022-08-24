@@ -166,7 +166,11 @@
 			$('[name=co_content]').val('');
 		}//
 		function commentUpdateSuccess(data){
-			console.log(data)
+			if(data.res)
+				alert('댓글을 수정했습니다');
+			else
+				alert('댓글 수정에 실패했습니다');
+			getCommentList(cri);
 		}//
 		function commentDeleteSuccess(data){
 			if(data.res)
@@ -187,7 +191,7 @@
 				str +=   '</div>';
 				str +=   '<div class="btn-box">';
 				if(co.co_me_id == '${user.me_id}'){
-					str += 	 '<button class="btn btn-outline-success btn-co-update" style="display:block">수정</button>';
+					str += 	 '<button data-target="'+co.co_num+'" class="btn btn-outline-success btn-co-update" style="display:block">수정</button>';
 					str +=   '<button data-target="'+co.co_num+'" class="btn btn-outline-danger btn-co-delete mt-1" style="display:block">삭제</button>';
 				}
 				str +=   '</div>'
@@ -203,6 +207,43 @@
 				ajaxPost(false, comment, '/ajax/comment/delete', commentDeleteSuccess);
 			})
 			
+			//댓글 수정 이벤트
+			$('.btn-co-update').click(function(){
+				$('.btn-co-cancel').click();
+				//기존 입력창을 감추고 textarea로 바꿈
+				let contentEl = $(this).parent().siblings('.media-body').children('p');
+				contentEl.hide();
+				let content = contentEl.text();
+				let str = '';
+				str += '<div class="form-group box-content">';
+				str += 	'<textarea class="form-control" rows="3">'+content+'</textarea>';
+				str += '</div>';
+				contentEl.after(str);
+				//수정, 삭제 버튼 감춤
+				$(this).parent().hide();
+				//수정완료, 수정취소 버튼 추가
+				let co_num = $(this).data('target');
+				str = '';
+				str += '<div class="btn-box2">';
+				str += 	'<button data-target="'+co_num+'" class="btn btn-outline-success btn-co-complete" style="display:block">완료</button>';
+				str += 	'<button class="btn btn-outline-danger btn-co-cancel mt-1" style="display:block">취소</button>';
+				str += '</div>';
+				$(this).parent().after(str);
+				//수정 완료 버튼 클릭
+				$('.btn-co-complete').click(function(){
+					let co_num = $(this).data('target');
+					let co_content = $(this).parent().siblings('.media-body').find('textarea').val();
+					let comment = {co_num, co_content};
+					ajaxPost(false,comment,'/ajax/comment/update', commentUpdateSuccess)
+				})
+				//수정 취소 버튼 클릭
+				$('.btn-co-cancel').click(function(){
+					 $(this).parent().siblings('.media-body').find('p').show();
+					 $(this).parent().siblings('.media-body').find('.box-content').remove();
+					 $(this).parent().siblings('.btn-box').show();
+					 $(this).parent().remove();
+				})
+			})
 			//댓글 페이지네이션
 			let pm = data.pm;
 			let pmStr = '';
