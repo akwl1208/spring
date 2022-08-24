@@ -165,6 +165,16 @@
 			getCommentList(cri);
 			$('[name=co_content]').val('');
 		}//
+		function commentUpdateSuccess(data){
+			console.log(data)
+		}//
+		function commentDeleteSuccess(data){
+			if(data.res)
+				alert('댓글을 삭제했습니다');
+			else
+				alert('댓글 삭제에 실패했습니다');
+			getCommentList(cri);
+		}//
 		function commentListSuccess(data){
 			let list = data.list;
 			let str = '';
@@ -225,12 +235,7 @@
 				cri.page = $(this).data('page');
 				getCommentList(cri);
 			})
-		}//
-		function commentUpdateSuccess(data){
-			console.log(data)
-		}//
-		function commentDeleteSuccess(data){
-			console.log(data)
+
 		}//
 		
 		//ajaxPost
