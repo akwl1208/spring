@@ -63,7 +63,7 @@ public class BoardServiceImp implements BoardService{
 	}
 
 	@Override
-	public void updateBoard(BoardVO board, MemberVO user) {
+	public void updateBoard(BoardVO board, MemberVO user, MultipartFile[] files, int[] nums) {
 		if(user == null || board == null)
 			return;
 		if(board.getBd_title().trim().length() == 0)
@@ -78,6 +78,19 @@ public class BoardServiceImp implements BoardService{
 			return;
 		
 		boardDao.updateBoard(board);
+		
+		if(files != null && files.length != 0) {
+			for(MultipartFile tmp : files) {
+				insertFile(tmp, board.getBd_num());
+			}
+		}
+		
+		if(nums == null || nums.length == 0)
+			return;
+		for(int fi_num : nums) {
+			FileVO file = boardDao.selectFile(fi_num);
+			deleteFile(file);
+		}
 	}
 
 	@Override
