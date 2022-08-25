@@ -12,4 +12,9 @@
 		insert into member(me_id, me_pw, me_email, me_birth, me_gender, me_authority)
 	  	values(#{member.me_id},#{member.me_pw},#{member.me_email},#{member.me_birth},#{member.me_gender},1)
 	</insert>
+	
+	<select id="selectId" resultType="String">
+		select me_id from member
+			where me_birth= #{member.me_birth_str} and me_email = #{member.me_email} 
+	</select>
 </mapper>

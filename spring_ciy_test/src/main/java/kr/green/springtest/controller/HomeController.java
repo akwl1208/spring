@@ -1,5 +1,6 @@
 package kr.green.springtest.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,5 +80,21 @@ public class HomeController {
 		map.put("check", memberService.idCheck(member));
 		return map;
 	}
+	//아이디 찾기
+	@RequestMapping(value= "/find", method=RequestMethod.GET)
+	public ModelAndView findGet(ModelAndView mv, String type){
+		mv.addObject("type", type);
+		mv.setViewName("/main/find");
+    return mv;
+	}
 	
+	@RequestMapping(value ="/find/id")
+	@ResponseBody
+	public Map<Object, Object> findId(@RequestBody MemberVO member){
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		String id = memberService.getId(member);
+		
+		map.put("id", id);
+		return map;
+	}
 }

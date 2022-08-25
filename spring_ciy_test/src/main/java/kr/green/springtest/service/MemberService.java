@@ -10,5 +10,7 @@ public interface MemberService {
 
 	Object idCheck(MemberVO member);
 
+	String getId(MemberVO member);
+
 	
 }
