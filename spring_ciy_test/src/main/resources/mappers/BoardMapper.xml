@@ -104,4 +104,12 @@
 		insert into file(fi_name, fi_ori_name, fi_bd_num)
 			values(#{fi.fi_name},#{fi.fi_ori_name},#{fi.fi_bd_num})
 	</insert>
+	
+	<select id="selectFileList" resultType="kr.green.springtest.vo.FileVO">
+		select * from file where fi_bd_num = #{bd_num}
+	</select>
+	
+	<delete id="deleteFile">
+		delete from file where fi_num = #{fi_num}
+	</delete>
 </mapper>
