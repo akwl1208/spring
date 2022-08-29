@@ -55,6 +55,9 @@
 				<a href="<c:url value="/board/update/${board.bd_num}"></c:url>" class="btn btn-outline-info">수정</a>
 				<a href="<c:url value="/board/delete/${board.bd_num}"></c:url>" class="btn btn-outline-danger">삭제</a>
 			</c:if>
+			<c:if test="${user.me_id != board.bd_me_id}">
+				<a href="<%=request.getContextPath()%>/board/insert?bd_ori_num=${board.bd_ori_num}&bd_depth=${board.bd_depth}&bd_order=${board.bd_order}" class="btn btn-outline-info">답글</a>
+			</c:if>
 			<hr>
 			<div class="form-group">
 				<textarea class="form-control" rows="5" name="co_content"></textarea>

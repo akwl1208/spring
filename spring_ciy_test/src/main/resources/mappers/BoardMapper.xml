@@ -13,7 +13,7 @@
 			<if test = "cri.searchType != 'all'">
 				and ${cri.searchType} like concat('%',#{cri.search},'%') 
 			</if> 
-			order by bd_num desc
+			order by bd_ori_num desc, bd_order asc
 			limit #{cri.pageStart}, #{cri.perPageNum}
 	</select>
   	
@@ -28,9 +28,20 @@
 	</update>
 	
 	<insert id="insertBoard" useGeneratedKeys="true" keyProperty="board.bd_num">
-		insert into board(bd_title, bd_content, bd_me_id, bd_ori_num, bd_depth)
-			select #{board.bd_title}, #{board.bd_content}, #{board.bd_me_id}, ifnull(max(bd_num),0) + 1, 1 from board;
+		insert into board(bd_title, bd_content, bd_me_id, bd_ori_num, bd_depth,bd_order)
+		<if test="board.bd_ori_num == 0">
+			select #{board.bd_title}, #{board.bd_content}, #{board.bd_me_id}, ifnull(max(bd_num),0) + 1, 1, 1 from board;
+		</if>
+		<if test="board.bd_ori_num != 0">
+			values(#{board.bd_title},#{board.bd_content},#{board.bd_me_id},#{board.bd_ori_num},#{board.bd_depth}+1,#{board.bd_order}+1)
+		</if>
 	</insert>
+	
+	<update id="updateBoardOrder">
+		update board
+			set bd_order = bd_order+1 
+			where bd_ori_num = #{board.bd_ori_num} and bd_order > #{board.bd_order}
+	</update>
 	
 	<update id="updateBoard">
 		update board
