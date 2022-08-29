@@ -136,4 +136,26 @@ public class MemberServiceImp implements MemberService{
 		String content = newPw + "<br>임시 비밀번호로 로그인해주세요";
 		return sendEmail(title, content, member.getMe_email());
 	}
+
+	@Override
+	public boolean updateMember(MemberVO member, MemberVO user) {
+		if(member == null || user == null)
+			return false;
+		if(!member.getMe_id().equals(user.getMe_id()))
+			return false;
+		
+		user.setMe_birth(member.getMe_birth());
+		user.setMe_gender(member.getMe_gender());
+		user.setMe_email(member.getMe_email());
+		
+		if(member.getMe_authority() != 0)
+			user.setMe_authority(member.getMe_authority());
+		
+		if(member.getMe_pw() != null && member.getMe_pw().length() != 0) {
+			String encPw = passwordEncoder.encode(member.getMe_pw());
+			user.setMe_pw(encPw);
+		}
+		memberDao.updateMember(user);
+		return true;
+	}
 }

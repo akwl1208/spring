@@ -89,7 +89,7 @@ public class HomeController {
 	
 	@RequestMapping(value ="/ajax/find/id")
 	@ResponseBody
-	public Map<Object, Object> findId(@RequestBody MemberVO member){
+	public Map<Object, Object> ajaxFindId(@RequestBody MemberVO member){
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 		String id = memberService.getId(member);
 		
@@ -99,10 +99,27 @@ public class HomeController {
 	//비밀번호 찾기
 	@RequestMapping(value ="/ajax/find/pw")
 	@ResponseBody
-	public Map<Object, Object> findPw(@RequestBody MemberVO member){
+	public Map<Object, Object> ajaxFindPw(@RequestBody MemberVO member){
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 		boolean res = memberService.findPw(member);
 		map.put("res", res);
 		return map;
+	}
+	//회원정보 수정
+	@RequestMapping(value= "/member/update", method=RequestMethod.GET)
+	public ModelAndView memberUpdateGet(ModelAndView mv){
+		mv.setViewName("/main/update");
+    return mv;
+	}
+	
+	@RequestMapping(value= "/member/update", method=RequestMethod.POST)
+	public ModelAndView memberUpdatePost(ModelAndView mv, MemberVO member,
+			HttpSession session){
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		boolean res = memberService.updateMember(member, user);
+		
+		mv.addObject("res", res);
+		mv.setViewName("redirect:/");
+    return mv;
 	}
 }

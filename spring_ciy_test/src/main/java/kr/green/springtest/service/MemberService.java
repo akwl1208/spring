@@ -16,5 +16,5 @@ public interface MemberService {
 
 	boolean sendEmail(String title, String content, String email);
 
-	
+	boolean updateMember(MemberVO member, MemberVO user);
 }
