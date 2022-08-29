@@ -1,6 +1,10 @@
 package kr.green.springtest.service;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +18,8 @@ public class MemberServiceImp implements MemberService{
 	MemberDAO memberDao;
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
+	@Autowired
+	private JavaMailSender mailSender;
 
 	@Override
 	public boolean signup(MemberVO member) {
@@ -85,6 +91,49 @@ public class MemberServiceImp implements MemberService{
 		return memberDao.selectId(member);
 	}
 	
-
+	@Override
+	public boolean sendEmail(String title, String content, String toEmail) {
+	  try {
+	      MimeMessage message = mailSender.createMimeMessage();
+	      MimeMessageHelper messageHelper 
+	          = new MimeMessageHelper(message, true, "UTF-8");
 	
+	      messageHelper.setFrom("pageup64@naver.com");  // 보내는사람 생략하거나 하면 정상작동을 안함
+	      messageHelper.setTo(toEmail);     // 받는사람 이메일
+	      messageHelper.setSubject(title); // 메일제목은 생략이 가능하다
+	      messageHelper.setText(content, true);  // 메일 내용
+	
+	      mailSender.send(message);
+	  } catch(Exception e){
+	     	return false;
+	  }
+	  return true;
+	}
+	
+	@Override
+	public boolean findPw(MemberVO member) {
+		if(member == null || member.getMe_birth() == null || member.getMe_email() == null)
+			return false;
+		
+		String id = memberDao.selectId(member);
+		if(id == null)
+			return false;
+		MemberVO dbMember = memberDao.selectMember(id);
+		
+		String pwPattern = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String newPw = "";
+		int max = 8;
+		for(int i = 0; i < max; i++){
+			int index = (int)(Math.random() * (pwPattern.length()+1));
+			newPw += pwPattern.charAt(index);
+		}
+		
+		String encPw = passwordEncoder.encode(newPw);
+		dbMember.setMe_pw(encPw);
+		memberDao.updateMember(dbMember);
+		
+		String title = "임시 비밀번호입니다";
+		String content = newPw + "<br>임시 비밀번호로 로그인해주세요";
+		return sendEmail(title, content, member.getMe_email());
+	}
 }

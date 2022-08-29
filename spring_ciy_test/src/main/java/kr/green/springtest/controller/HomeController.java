@@ -1,6 +1,5 @@
 package kr.green.springtest.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,13 +87,22 @@ public class HomeController {
     return mv;
 	}
 	
-	@RequestMapping(value ="/find/id")
+	@RequestMapping(value ="/ajax/find/id")
 	@ResponseBody
 	public Map<Object, Object> findId(@RequestBody MemberVO member){
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 		String id = memberService.getId(member);
 		
 		map.put("id", id);
+		return map;
+	}
+	//비밀번호 찾기
+	@RequestMapping(value ="/ajax/find/pw")
+	@ResponseBody
+	public Map<Object, Object> findPw(@RequestBody MemberVO member){
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		boolean res = memberService.findPw(member);
+		map.put("res", res);
 		return map;
 	}
 }

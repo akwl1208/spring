@@ -12,5 +12,9 @@ public interface MemberService {
 
 	String getId(MemberVO member);
 
+	boolean findPw(MemberVO member);
+
+	boolean sendEmail(String title, String content, String email);
+
 	
 }

@@ -17,4 +17,14 @@
 		select me_id from member
 			where me_birth= #{member.me_birth_str} and me_email = #{member.me_email} 
 	</select>
+	
+	<update id="updateMember">
+		update member 
+			set me_pw = #{member.me_pw},
+					me_gender = #{member.me_gender},
+					me_birth = #{member.me_birth},
+					me_email = #{member.me_email},
+					me_authority = #{member.me_authority}
+			where me_id = #{member.me_id}
+	</update>
 </mapper>

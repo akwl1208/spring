@@ -77,11 +77,31 @@
 				me_email,
 			}
 			
-			ajaxPost(false, member,'/find/id',findIdSuccess);
+			ajaxPost(false, member,'/ajax/find/id',findIdSuccess);
 		})
 		
 		$('.btn-find-pw').click(function(){
+			let me_birth = $('#pw [name=me_birth]').val();
+			let me_email = $('#pw [name=me_email]').val();
 			
+			let birthRegex = /^\d{4}-\d{2}-\d{2}$/
+			if(!birthRegex.test(me_birth)){
+				alert('생일을 올바르게 입력하세요.');
+				$('#pw [name=me_birth]').focus();
+				return;
+			}
+			if(me_email.trim() == ''){
+				alert('이메일을 입력하세요');
+				$('#pw [name=me_email]').focus();
+				return;
+			}
+			
+			let member = {
+				me_birth,
+				me_email,
+			}
+			
+			ajaxPost(false, member,'/ajax/find/pw',findPwSuccess);
 		})
 	})
 	function findIdSuccess(data){
@@ -91,6 +111,13 @@
    	}else{
    		alert('회원님의 아이디는 다음과 같습니다\n'+data.id);
    	}
+	}
+	function findPwSuccess(data){
+		if(data.res){
+			alert('메일로 임시 비밀번호를 전송했습니다. 확인하세요')
+		}else{
+			alert('입력한 정보가 잘못됐거나 없는 회원 정보입니다')
+		}
 	}
 	//ajaxPost
 	function ajaxPost(async, dataObj, url, success){
