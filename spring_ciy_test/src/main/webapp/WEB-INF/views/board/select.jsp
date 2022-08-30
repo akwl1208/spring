@@ -63,7 +63,14 @@
 				<textarea class="form-control" rows="5" name="co_content"></textarea>
 				<button class="btn btn-outline-info col-12 btn-co-insert">댓글등록</button>
 			</div>
-			<div class="list-comment"></div>
+			<div class="list-comment">
+				<div class="media border p-3">
+					<div class="media-body">
+						<h5>아이디<small><i>등록일</i></small></h5>
+						<p>댓글 내용</p>
+					</div>
+				</div>
+			</div>
 		  <ul class="pagination-comment pagination justify-content-center mt-3"></ul>
 		</c:if>
 		<c:if test="${board.bd_del == 'Y'}">
@@ -151,6 +158,70 @@
 			getCommentList(cri);
 		})//
 		
+		//답댓 버튼 클릭
+		$(document).on('click','.btn-co-reply',function(){
+			let co_me_id = '${user.me_id}';
+			//아이디 확인
+			if(co_me_id == ''){
+				//로그인 화면으로 이동할지 물어보고
+				if(confirm('로그인한 회원만 댓글 작성이 가능합니다. 로그인하겠습니까?')){
+					//로그인화면으로 이동
+					location.href = '<%=request.getContextPath()%>/login';
+					return;
+				}else{
+					return;
+				}
+			}
+			
+			$('.btn-co-cancel').click();
+			$('.btn-reply-cancel').click();
+			
+			let str = '';
+			str += '<div class="media p-3 box-reply">';
+			str += 	 '<div class="media-body">';
+			str += 	 	'<div class="form-group">';
+			str += 	 		'<textarea class="form-control" rows="5" name="co_reply_content"></textarea>';
+			str += 	 	'</div>';
+			str +=   '</div>';
+			str +=   '<div class="btn-box">';
+			str += 	 	'<button class="btn btn-outline-success btn-reply-complete" style="display:block">완료</button>';
+			str +=  	'<button class="btn btn-outline-danger btn-reply-cancel mt-1" style="display:block">취소</button>';
+			str +=   '</div>'
+			str += '</div>';
+			$(this).parent().siblings('.media-body').append(str);
+			$(this).parent().hide();
+		})
+		
+		//답댓 완료 버튼 클릭
+		$(document).on('click','.btn-reply-complete',function(){
+			//댓글 내용 확인				
+			let co_bd_num = '${board.bd_num}';
+			let co_content = $('[name=co_reply_content]').val();
+			//댓글 내용이 없으면 입력하라고 알려줌
+			if(co_content.trim().length == 0){
+				alert('내용을 입력하세요')
+				$('[name=co_reply_content]').focus();
+				return;					
+			}
+			
+			let co_ori_num = $(this).parents('.comment-body').find('.btn-co-reply').data('orinum');
+			let co_depth = $(this).parents('.comment-body').find('.btn-co-reply').data('depth');
+			let co_order = $(this).parents('.comment-body').find('.btn-co-reply').data('order');
+			let comment = {
+				co_content,
+				co_bd_num : '${board.bd_num}',
+				co_ori_num,
+				co_depth,
+				co_order
+			}
+			ajaxPost(false, comment, '/ajax/comment/insert', commentInsertSuccess);
+		})
+		
+		//답댓 취소 버튼 클릭
+		$(document).on('click','.btn-reply-cancel',function(){
+			$(this).parents('.comment-body').find('.btn-box').show();
+			$(this).parents('.box-reply').remove();
+		})
 		//전역변수
 		let cri = {
 			page : 1,
@@ -196,14 +267,17 @@
 			let str = '';
 			//반복문을 이용해 댓글 구성
 			for(co of list){
-				str += '<div class="media border p-3">';
+				str += '<div class="media border p-3 comment-body">';
 				str += 	 '<div class="media-body">';
+				for(let i = 2; i<=co.co_depth; i++)
+					str += 	 '└';
 				str +=     '<h5>'+ co.co_me_id + '<small><i>' + co.co_reg_date_str + '</i></small></h5>';
-				str +=     '<p>'+ co.co_content +'</p>';      
+				str +=     '<p>'+ co.co_content +'</p>';
 				str +=   '</div>';
 				str +=   '<div class="btn-box">';
+				str +=	 	 '<button data-orinum="'+co.co_ori_num+'" data-depth="'+co.co_depth+'" data-order="'+co.co_order+'" class="btn btn-outline-warning btn-co-reply" style="display:block">답댓</button>';
 				if(co.co_me_id == '${user.me_id}'){
-					str += 	 '<button data-target="'+co.co_num+'" class="btn btn-outline-success btn-co-update" style="display:block">수정</button>';
+					str += 	 '<button data-target="'+co.co_num+'" class="btn btn-outline-success btn-co-update mt-1" style="display:block">수정</button>';
 					str +=   '<button data-target="'+co.co_num+'" class="btn btn-outline-danger btn-co-delete mt-1" style="display:block">삭제</button>';
 				}
 				str +=   '</div>'
@@ -222,6 +296,7 @@
 			//댓글 수정 이벤트
 			$('.btn-co-update').click(function(){
 				$('.btn-co-cancel').click();
+				$('.btn-reply-cancel').click();
 				//기존 입력창을 감추고 textarea로 바꿈
 				let contentEl = $(this).parent().siblings('.media-body').children('p');
 				contentEl.hide();
@@ -255,7 +330,8 @@
 					 $(this).parent().siblings('.btn-box').show();
 					 $(this).parent().remove();
 				})
-			})
+			})//
+			
 			//댓글 페이지네이션
 			let pm = data.pm;
 			let pmStr = '';
@@ -288,7 +364,6 @@
 				cri.page = $(this).data('page');
 				getCommentList(cri);
 			})
-
 		}//
 		
 		//ajaxPost
