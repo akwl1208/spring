@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +67,9 @@ public class HomeController {
 	}
 	//로그아웃
 	@RequestMapping(value= "/logout")
-	public ModelAndView logout(ModelAndView mv, HttpSession session){
-		session.removeAttribute("user");
+	public ModelAndView logout(ModelAndView mv, HttpServletRequest request,
+			HttpServletResponse response){
+		memberService.logout(request, response);
     mv.setViewName("redirect:/");
     return mv;
 	}

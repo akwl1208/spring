@@ -1,12 +1,19 @@
 package kr.green.springtest.service;
 
+import java.util.Date;
+
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import kr.green.springtest.dao.MemberDAO;
 import kr.green.springtest.vo.MemberVO;
@@ -63,6 +70,8 @@ public class MemberServiceImp implements MemberService{
 		//가입된 아이디가 아니면
 		if(dbMember == null)
 			return null;
+		
+		dbMember.setAutoLogin(member.isAutoLogin());
 		
 		//아이디, 비번이 일치하는 경우
 		if(passwordEncoder.matches(member.getMe_pw(), dbMember.getMe_pw()))
@@ -157,5 +166,40 @@ public class MemberServiceImp implements MemberService{
 		}
 		memberDao.updateMember(user);
 		return true;
+	}
+
+	@Override
+	public void updateMemberSession(String me_id, String session_id, Date session_limit) {
+		if(me_id == null)
+			return;
+		memberDao.updateMemberSession(me_id,session_id,session_limit);
+	}
+
+	@Override
+	public MemberVO autoLogin(String session_id) {
+		if(session_id == null)
+			return null;
+		return memberDao.selectMemberBySession(session_id);
+	}
+
+	@Override
+	public void logout(HttpServletRequest request, HttpServletResponse response) {
+		if(request == null || response == null)
+			return;
+		//세션에 있는 회원 정보 삭제
+		HttpSession session = request.getSession();
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		if(user == null)
+			return;
+		session.removeAttribute("user");
+		//쿠키 정보 초기화
+		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+		if(loginCookie == null)
+			return;
+		loginCookie.setPath("/");
+		loginCookie.setMaxAge(0);
+		response.addCookie(loginCookie);
+		//회원세션 정보 수정
+		updateMemberSession(user.getMe_id(), null, null);
 	}
 }

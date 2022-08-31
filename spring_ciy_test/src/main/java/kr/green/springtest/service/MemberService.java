@@ -1,5 +1,10 @@
 package kr.green.springtest.service;
 
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import kr.green.springtest.vo.MemberVO;
 
 public interface MemberService {
@@ -17,4 +22,10 @@ public interface MemberService {
 	boolean sendEmail(String title, String content, String email);
 
 	boolean updateMember(MemberVO member, MemberVO user);
+
+	void updateMemberSession(String me_id, String me_session_id, Date me_session_date);
+
+	MemberVO autoLogin(String sessionId);
+
+	void logout(HttpServletRequest request, HttpServletResponse response);
 }
