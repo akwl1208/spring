@@ -40,7 +40,7 @@
 				<button class="btn btn-down <c:if test="${likes.li_state == -1}">red</c:if>" data-value="-1"><i class="fa-solid fa-thumbs-down"></i></button>
 			</div>
 			<div class="form-group">
-			  <textarea class="form-control" rows="10" name="bd_content" readonly>${board.bd_content}</textarea>
+			  <div class="form-control" name="bd_content" style="height:auto; min-height:500px;">${board.bd_content}</div>
 			</div>
 			<div class="form-group">
 				<label>첨부파일</label>

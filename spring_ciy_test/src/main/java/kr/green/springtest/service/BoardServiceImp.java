@@ -22,6 +22,7 @@ public class BoardServiceImp implements BoardService{
 	BoardDAO boardDao;
 
 	private String uploadPath = "D:\\git\\uploadfiles";
+	private String imgUploadPath = "D:\\git\\img";
 	
 	@Override
 	public ArrayList<BoardVO> getBoardList(Criteria cri) {
@@ -241,5 +242,18 @@ public class BoardServiceImp implements BoardService{
 	private void deleteFile(FileVO tmp) {
 		UploadFileUtils.deleteFile(uploadPath, tmp.getFi_name());
 		boardDao.deleteFile(tmp.getFi_num());
+	}
+
+	@Override
+	public String uploadImage(MultipartFile file) {
+		if(file == null || file.getOriginalFilename().length() == 0)
+			return null;
+		String url = null;
+		try {
+			url = UploadFileUtils.uploadFile(imgUploadPath, file.getOriginalFilename(), file.getBytes());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return url;
 	}
 }
