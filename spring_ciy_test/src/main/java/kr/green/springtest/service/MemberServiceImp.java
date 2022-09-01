@@ -200,6 +200,6 @@ public class MemberServiceImp implements MemberService{
 		loginCookie.setMaxAge(0);
 		response.addCookie(loginCookie);
 		//회원세션 정보 수정
-		updateMemberSession(user.getMe_id(), null, null);
+		memberDao.updateMemberSession(user.getMe_id(), null, null);
 	}
 }
