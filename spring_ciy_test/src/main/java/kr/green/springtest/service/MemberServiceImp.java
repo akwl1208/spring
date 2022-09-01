@@ -1,5 +1,6 @@
 package kr.green.springtest.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.mail.internet.MimeMessage;
@@ -201,5 +202,35 @@ public class MemberServiceImp implements MemberService{
 		response.addCookie(loginCookie);
 		//회원세션 정보 수정
 		memberDao.updateMemberSession(user.getMe_id(), null, null);
+	}
+
+	@Override
+	public ArrayList<MemberVO> getMemberList(MemberVO user) {
+		if(user == null)
+			return null;
+		if(user.getMe_authority() < 8)
+			return null;
+		
+		return memberDao.selectMemberList(user);
+	}
+
+	@Override
+	public boolean updateAuthority(MemberVO member, MemberVO user) {
+		if(member == null || user == null)
+			return false;
+		
+		if(user.getMe_authority() < 8)
+			return false;
+		
+		if(member.getMe_authority() >= user.getMe_authority())
+			return false;
+		
+		MemberVO dbMember = memberDao.selectMember(member.getMe_id());
+		if(dbMember == null || dbMember.getMe_authority() >= user.getMe_authority())
+			return false;
+		
+		dbMember.setMe_authority(member.getMe_authority());
+		memberDao.updateMember(dbMember);
+		return true;
 	}
 }

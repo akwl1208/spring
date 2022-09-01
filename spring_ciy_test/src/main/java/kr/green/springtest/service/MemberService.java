@@ -1,5 +1,6 @@
 package kr.green.springtest.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,4 +29,8 @@ public interface MemberService {
 	MemberVO autoLogin(String sessionId);
 
 	void logout(HttpServletRequest request, HttpServletResponse response);
+
+	ArrayList<MemberVO> getMemberList(MemberVO user);
+
+	boolean updateAuthority(MemberVO member, MemberVO user);
 }

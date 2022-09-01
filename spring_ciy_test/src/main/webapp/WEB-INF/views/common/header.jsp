@@ -27,7 +27,12 @@
 	    		</c:if>
 	      	<li class="nav-item">
 	        	<a class="nav-link" href="<c:url value="/board/list"></c:url>">게시글</a>
-	      	</li>   
+	      	</li>
+	      	<c:if test="${user != null && user.me_authority >= 8}">
+	      		<li class="nav-item">
+	        		<a class="nav-link" href="<c:url value="/admin/member/list"></c:url>">회원등급관리</a>
+	      		</li>
+      		</c:if> 
 	    	</ul>
 		</div> 
 	</div> 

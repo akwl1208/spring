@@ -39,4 +39,8 @@
 		select * from member
 			where me_session_id = #{session_id} and me_session_limit > now()
 	</select>
+	
+	<select id="selectMemberList" resultType="kr.green.springtest.vo.MemberVO">
+		<![CDATA[select * from member where me_authority <]]> #{user.me_authority}
+	</select>
 </mapper>
