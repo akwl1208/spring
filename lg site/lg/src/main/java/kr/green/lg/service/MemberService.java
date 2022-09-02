@@ -11,4 +11,10 @@ public interface MemberService {
 	boolean sendEmail(String title, String content, String receiver);
 
 	boolean emailActive(MemberVO member);
+
+	MemberVO login(MemberVO member);
+
+	void updateMemberSession(MemberVO user);
+
+	MemberVO loginBySession(String me_s_id);
 }

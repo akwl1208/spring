@@ -21,6 +21,7 @@ public class MemberServiceImp implements MemberService {
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
 
+	/*-----method--------------------------------------------------------------------------*/
 	private String createRandom(String str, int count) {
 		if(str == null)
 			return "";
@@ -31,7 +32,7 @@ public class MemberServiceImp implements MemberService {
 		}
 		return randomStr;
 	}
-	
+	/*-----@overide--------------------------------------------------------------------------*/
 	@Override
 	public boolean signup(MemberVO member) {
 		if(member == null)
@@ -112,4 +113,37 @@ public class MemberServiceImp implements MemberService {
 		return false;
 	}
 
+	@Override
+	public MemberVO login(MemberVO member) {
+		if(member == null || member.getMe_email() == null || member.getMe_pw() == null)
+			return null;
+		
+		MemberVO user = memberDao.selectMember(member.getMe_email());
+		if(user == null)
+			return null;
+		
+		if(user.getMe_pos() != 1)
+			return null;
+		
+		user.setAutoLogin(member.isAutoLogin());
+		
+		if(passwordEncoder.matches(member.getMe_pw(), user.getMe_pw()))
+			return user;
+		return null;
+	}
+
+	@Override
+	public void updateMemberSession(MemberVO user) {
+		if(user == null || user.getMe_email() == null)
+			return;
+		memberDao.updateMemberSession(user);
+		
+	}
+
+	@Override
+	public MemberVO loginBySession(String me_s_id) {
+		if(me_s_id == null)
+			return null;
+		return memberDao.selectMemberBySession(me_s_id);
+	}
 }

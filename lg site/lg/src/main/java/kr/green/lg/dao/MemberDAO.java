@@ -14,4 +14,7 @@ public interface MemberDAO {
 
 	void updatePosCount(String me_email);
 
+	void updateMemberSession(MemberVO user);
+
+	MemberVO selectMemberBySession(String me_s_id);
 }

@@ -58,6 +58,18 @@ public class HomeController {
 		return mv;
 	}
 	
+	@RequestMapping(value = "/login")
+	public ModelAndView loginGet(ModelAndView mv, MemberVO member) {
+		mv.addObject("title","로그인");
+		MemberVO user = memberService.login(member);
+		mv.addObject("user", user);
+		if(user == null)		
+			mv.setViewName("/main/login");
+		else
+			mv.setViewName("redirect:/");
+		return mv;
+	}
+
 	/*----- ajax ------------------------------------------------------------------------*/
 	@RequestMapping(value = "/check/email", method = RequestMethod.POST)
 	@ResponseBody
