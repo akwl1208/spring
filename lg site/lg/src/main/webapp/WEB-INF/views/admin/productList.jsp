@@ -16,17 +16,25 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
+        <th>제품 이미지</th>
+        <th>제품 종류</th>
+        <th>제품 코드</th>
+        <th>제목</th>
+        <th>가격</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
+    	<c:forEach items = "${list}" var="pro" >
+	    	<tr>
+	        <td> 
+	        	<img alt="제품이미지" src="<c:url value="/product/img${pro.pr_thumb}"></c:url>" width="150px" height="150px">
+	        </td>
+	        <td>${pro.pr_ca_name}</td>
+	        <td>${pro.pr_code}</td>
+	        <td>${pro.pr_title}</td>
+	        <td>${pro.pr_price}</td>
+	      </tr>
+    	</c:forEach>
     </tbody>
   </table>
   <!-- 페이지네이션 ------------------------------------------------------------------------------------------- -->
