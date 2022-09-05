@@ -3,6 +3,9 @@ package kr.green.lg.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,7 +62,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/login")
-	public ModelAndView loginGet(ModelAndView mv, MemberVO member) {
+	public ModelAndView login(ModelAndView mv, MemberVO member) {
 		mv.addObject("title","로그인");
 		MemberVO user = memberService.login(member);
 		mv.addObject("user", user);
@@ -67,6 +70,15 @@ public class HomeController {
 			mv.setViewName("/main/login");
 		else
 			mv.setViewName("redirect:/");
+		return mv;
+	}
+	
+	@RequestMapping(value = "/logout")
+	public ModelAndView logout(ModelAndView mv, HttpServletRequest request,
+			HttpServletResponse response) {
+		memberService.logout(request,response);
+	
+		mv.setViewName("redirect:/");
 		return mv;
 	}
 
