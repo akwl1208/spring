@@ -43,11 +43,11 @@
 					</div>
 				</li>
 	     	<li class="nav-item">
-	       	<a class="nav-link" href="#">Link</a>
+	       	<a class="nav-link" href="<c:url value="/admin"></c:url>">관리자</a>
 	     	</li>
 	     	<li class="nav-item">
 	       	<a class="nav-link" href="#">Link</a>
-	     	</li>    
+	     	</li>
     	</ul>
 		</div> 
 	</div> 
