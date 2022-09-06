@@ -17,9 +17,6 @@
 	text-align: center; font-size: 50px; line-height: 148px;
 	cursor: pointer; box-sizing: border-box;
 }
-#preview{
-	display: none;
-}
 </style>
 </head>
 <!-- body ---------------------------------------------------------------- -->
