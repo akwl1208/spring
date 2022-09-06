@@ -23,4 +23,6 @@ public interface ProductDAO {
 	int selectProductTotalCount(Criteria cri);
 
 	ProductVO selectProduct(String pr_code);
+
+	int deleteProduct(String pr_code);
 }

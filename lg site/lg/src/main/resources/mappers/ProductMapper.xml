@@ -41,4 +41,8 @@
 	<select id="selectProduct" resultType="kr.green.lg.vo.ProductVO">
 		select * from product where pr_code = #{p.pr_code}
 	</select>
+	
+	<delete id="deleteProduct">
+		delete from product where pr_code = #{pr_code}
+	</delete>
 </mapper> 

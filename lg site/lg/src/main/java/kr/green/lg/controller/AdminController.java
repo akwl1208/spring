@@ -87,4 +87,16 @@ public class AdminController {
 		mv.setViewName("redirect:/admin/product/list");
 		return mv;
 	}
+	
+	@RequestMapping(value = "/admin/product/delete", method = RequestMethod.POST)
+	public ModelAndView productDeletePost(ModelAndView mv, HttpServletResponse response,
+			String pr_code){
+		boolean res = productService.deleteProduct(pr_code);
+		if(res)
+			messageService.message(response, "제품을 삭제했습니다.", "/lg/admin/product/list");
+		else
+			messageService.message(response, "제품 삭제에 실패했습니다.", "/lg/admin/product/list");
+		mv.setViewName("redirect:/admin/product/list");
+		return mv;
+	}
 }
