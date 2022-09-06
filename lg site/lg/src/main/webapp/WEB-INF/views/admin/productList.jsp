@@ -50,8 +50,8 @@ from.btn{
        		</td>
 	        <td>${pro.pr_price}</td>
 	        <td>
-	        	<a class="btn btn-outline-success" href="<c:url value="admin/product/update?pr_code=${pro.pr_code}"></c:url>">수정</a>
-	        	<form class="btn btn-outline-warning" action="<c:url value="/admin/product/delete"></c:url>" method="post">
+	        	<a class="btn btn-outline-success" href="<c:url value="/admin/product/update?pr_code=${pro.pr_code}"></c:url>">수정</a>
+	        	<form class="btn btn-outline-warning" action="<c:url value="admin/product/delete"></c:url>" method="post">
 	        		<button class="btn-del">삭제</button>
 	        		<input type="hidden" name="pr_code" value="${pro.pr_code}">
 	        	</form>
