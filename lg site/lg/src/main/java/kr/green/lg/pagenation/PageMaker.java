@@ -26,7 +26,7 @@ public class PageMaker {
 		next = endPage * cri.getPerPageNum() >= totalCount ? false:true;
 	}
 	
-	private PageMaker(int totalCount, int displayPageNum, Criteria cri) {
+	public PageMaker(int totalCount, int displayPageNum, Criteria cri) {
 		this.totalCount = totalCount;
 		this.displayPageNum = displayPageNum;
 		this.cri = cri;

@@ -19,4 +19,6 @@ public interface ProductDAO {
 	void updateCategory(CategoryVO category);
 
 	ArrayList<ProductVO> selectProductList(Criteria cri);
+
+	int selectProductTotalCount(Criteria cri);
 }
