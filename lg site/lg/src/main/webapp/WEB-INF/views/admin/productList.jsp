@@ -13,7 +13,7 @@
 form.btn:hover .btn-del{
 	color: #fff
 }
-from.btn{
+form.btn{
 	margin-bottom: 0;
 }
 </style>

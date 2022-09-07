@@ -45,4 +45,26 @@ public class BoardServiceImp implements BoardService {
 			cri = new Criteria();
 		return boardDao.selectBoardTotalCount(cri, bd_type);
 	}
+
+	@Override
+	public boolean deleteBoard(Integer bd_num, MemberVO user) {
+		if(bd_num == null || user == null)
+			return false;
+		BoardVO dbBoard = boardDao.selectBoard(bd_num);
+		if(dbBoard == null)
+			return false;
+		if(user.getMe_authority() != 10 && dbBoard.getBd_me_email().equals(user.getMe_email()))
+			return false;
+		
+		return boardDao.deleteBoard(bd_num) == 1 ? true : false;
+	}
+	
+	@Override
+	public String getDeleteRedirectURL(String bd_type) {
+		if(bd_type.equals("NOTICE"))
+			return "/lg/admin/notice/list";
+		else if(bd_type.equals("QNA"))
+			return "";
+		return null;
+	}
 }
