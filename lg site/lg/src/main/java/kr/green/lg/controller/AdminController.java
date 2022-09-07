@@ -129,14 +129,20 @@ public class AdminController {
 	
 	@RequestMapping(value = "/admin/notice/list", method = RequestMethod.GET)
 	public ModelAndView noticeListGet(ModelAndView mv, Criteria cri) {
+		cri.setPerPageNum(2);
+		ArrayList<BoardVO> boardList = boardService.getBoardList(cri, "NOTICE");
 		
+		int totalCount = boardService.getTotalCount(cri, "NOTICE");
+		PageMaker pm = new PageMaker(totalCount, 2, cri);
+		
+		mv.addObject("pm", pm);
+		mv.addObject("list", boardList);
 		mv.setViewName("/admin/noticeList");
 		return mv;
 	}
 	
 	@RequestMapping(value = "/admin/notice/insert", method = RequestMethod.GET)
 	public ModelAndView noticeInsertGet(ModelAndView mv, Criteria cri) {
-		
 		mv.setViewName("/admin/noticeInsert");
 		return mv;
 	}

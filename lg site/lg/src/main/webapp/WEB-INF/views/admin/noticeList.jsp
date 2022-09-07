@@ -34,18 +34,18 @@ from.btn{
       </tr>
     </thead>
     <tbody>
-    	<c:forEach items = "${list}" var="pro" >
+    	<c:forEach items = "${list}" var="bo" varStatus="status">
 	    	<tr>
-	        <td>${num}</td>
+	        <td>${pm.totalCount - (pm.cri.page-1)*pm.cri.perPageNum - status.index}</td>
 	        <td>
-	        	<a href="<c:url value="/product/select?pr_code=${pro.pr_code}"></c:url>">${title}</a>	
+	        	<a href="<c:url value="/board/select?bd_num=${bo.bd_num}"></c:url>">${bo.bd_title}</a>	
        		</td>
-	        <td>${reg_date}</td>
+	        <td>${bo.bd_reg_date_str}</td>
 	        <td>
-	        	<a class="btn btn-outline-success" href="<c:url value="/admin/product/update?pr_code=${pro.pr_code}"></c:url>">수정</a>
-	        	<form class="btn btn-outline-warning" action="<c:url value="admin/product/delete"></c:url>" method="post">
+	        	<a class="btn btn-outline-success" href="<c:url value="/admin/board/update?bd_num=${bo.bd_num}"></c:url>">수정</a>
+	        	<form class="btn btn-outline-warning" action="<c:url value="/board/delete"></c:url>" method="post">
 	        		<button class="btn-del">삭제</button>
-	        		<input type="hidden" name="pr_code" value="${pro.pr_code}">
+	        		<input type="hidden" name="bd_num" value="${bo.bd_num}">
 	        	</form>
 	        </td>
 	      </tr>
@@ -55,21 +55,21 @@ from.btn{
   <!-- 페이지네이션 ------------------------------------------------------------------------------------------- -->
   <ul class="pagination justify-content-center">
   	<li class="page-item <c:if test="${!pm.prev}">disabled</c:if>">
-  		<a class="page-link" href="<c:url value="/admin/product/list?page=1&search=${pm.cri.search}&pr_ca_name=${pm.cri.pr_ca_name}"></c:url>">처음</a>
+  		<a class="page-link" href="<c:url value="/admin/notice/list?page=1&search=${pm.cri.search}"></c:url>">처음</a>
  		</li>
  	  <li class="page-item <c:if test="${!pm.prev}">disabled</c:if>">
- 	  	<a class="page-link" href="<c:url value="/admin/product/list?page=${pm.startPage-1}&search=${pm.cri.search}&pr_ca_name=${pm.cri.pr_ca_name}"></c:url>">이전</a>
+ 	  	<a class="page-link" href="<c:url value="/admin/notice/list?page=${pm.startPage-1}&search=${pm.cri.search}"></c:url>">이전</a>
 	  </li>  	
   	<c:forEach begin="${pm.startPage}" end="${pm.endPage}" var="i">
 	  	<li class="page-item <c:if test="${pm.cri.page == i}">active</c:if>">
-  			<a class="page-link" href="<c:url value="/admin/product/list?page=${i}&search=${pm.cri.search}&pr_ca_name=${pm.cri.pr_ca_name}"></c:url>">${i}</a>
+  			<a class="page-link" href="<c:url value="/admin/notice/list?page=${i}&search=${pm.cri.search}"></c:url>">${i}</a>
  		</li>
   	</c:forEach>
  	  <li class="page-item <c:if test="${!pm.next}">disabled</c:if>">
- 	  	<a class="page-link" href="<c:url value="/admin/product/list?page=${pm.endPage+1}&search=${pm.cri.search}&pr_ca_name=${pm.cri.pr_ca_name}"></c:url>">다음</a>
+ 	  	<a class="page-link" href="<c:url value="/admin/notice/list?page=${pm.endPage+1}&search=${pm.cri.search}"></c:url>">다음</a>
 	  </li>
    	<li class="page-item" <c:if test="${!pm.next}">disabled</c:if>>
-   		<a class="page-link" href="<c:url value="/admin/product/list?page=${pm.finalPage}&search=${pm.cri.search}&pr_ca_name=${pm.cri.pr_ca_name}"></c:url>">마지막</a>
+   		<a class="page-link" href="<c:url value="/admin/notice/list?page=${pm.finalPage}&search=${pm.cri.search}"></c:url>">마지막</a>
   	</li>
   </ul>
   <!-- 검색 ------------------------------------------------------------------------------------------- -->
