@@ -17,4 +17,8 @@ public interface BoardService {
 	boolean deleteBoard(Integer bd_num, MemberVO user);
 	
 	String getDeleteRedirectURL(String bd_type);
+
+	BoardVO getBoard(Integer bd_num);
+
+	boolean updateBoard(BoardVO board, MemberVO user);
 }

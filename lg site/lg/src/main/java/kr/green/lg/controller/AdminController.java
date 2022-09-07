@@ -159,4 +159,25 @@ public class AdminController {
 		return mv;
 	}
 	
+	@RequestMapping(value = "/admin/notice/update", method = RequestMethod.GET)
+	public ModelAndView noticeUpdateGet(ModelAndView mv, Integer bd_num) {
+		BoardVO board = boardService.getBoard(bd_num);
+		
+		mv.addObject("bo", board);
+		mv.setViewName("/admin/noticeUpdate");
+		return mv;
+	}
+	
+	@RequestMapping(value = "/admin/notice/update", method = RequestMethod.POST)
+	public ModelAndView noticeUpdatePost(ModelAndView mv, BoardVO board, 
+			HttpServletResponse response, HttpSession session) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		boolean res = boardService.updateBoard(board, user);
+		if(res)
+			messageService.message(response, "공지사항이 수정되었습니다.", "/lg/admin/notice/list");
+		else
+			messageService.message(response, "공지사항 수정에 실패했습니다.", "/lg/admin/notice/update");
+		return mv;
+	}
+	
 }
