@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,8 @@ import kr.green.lg.pagenation.Criteria;
 import kr.green.lg.pagenation.PageMaker;
 import kr.green.lg.service.ProductService;
 import kr.green.lg.vo.CategoryVO;
+import kr.green.lg.vo.LikesVO;
+import kr.green.lg.vo.MemberVO;
 import kr.green.lg.vo.ProductVO;
 
 
@@ -26,9 +30,13 @@ public class ProductController {
 	ProductService productService;
 	
 	@RequestMapping(value = "/product/select", method = RequestMethod.GET)
-	public ModelAndView productSelectGet(ModelAndView mv, String pr_code) {
+	public ModelAndView productSelectGet(ModelAndView mv, String pr_code,
+			HttpSession session) {
 		ProductVO product = productService.selectProduct(pr_code);
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		LikesVO like = productService.getLikes(pr_code, user);
 		
+		mv.addObject("li", like);
 		mv.addObject("p", product);
 		mv.setViewName("/product/select");
 		return mv;
@@ -61,6 +69,15 @@ public class ProductController {
 		
 		map.put("pm", pm);
 		map.put("list", productList);
+		return map;
+	}
+	
+	@RequestMapping(value = "/likes", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<Object, Object> likes(@RequestBody LikesVO likes) {
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		int res = productService.updateLikes(likes);
+		map.put("res", res);
 		return map;
 	}
 }
