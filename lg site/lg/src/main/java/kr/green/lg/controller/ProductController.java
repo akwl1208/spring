@@ -41,10 +41,21 @@ public class ProductController {
 		mv.setViewName("/product/select");
 		return mv;
 	}
+	
 	@RequestMapping(value = "/product/list", method = RequestMethod.GET)
 	public ModelAndView productListGet(ModelAndView mv, String ca_name) {
 		mv.addObject("pr_ca_name", ca_name);
 		mv.setViewName("/product/list");
+		return mv;
+	}
+	
+	@RequestMapping(value = "/likes/list", method = RequestMethod.GET)
+	public ModelAndView likesListGet(ModelAndView mv, HttpSession session) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		ArrayList<ProductVO> productList = productService.selectProductListByLikes(user);
+		
+		mv.addObject("list", productList);
+		mv.setViewName("/product/likesList");
 		return mv;
 	}
 	/*----- ajax ------------------------------------------------------------------------*/

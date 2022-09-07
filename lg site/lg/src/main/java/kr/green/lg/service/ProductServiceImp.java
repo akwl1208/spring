@@ -149,4 +149,11 @@ public class ProductServiceImp implements ProductService {
 		return 0;
 			
 	}
+
+	@Override
+	public ArrayList<ProductVO> selectProductListByLikes(MemberVO user) {
+		if(user == null || user.getMe_email() == null)
+			return null;
+		return productDao.selectProductListByLikes(user.getMe_email());
+	}
 }
