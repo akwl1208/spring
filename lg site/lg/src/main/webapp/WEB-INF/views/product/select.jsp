@@ -66,6 +66,59 @@
 		<label>제품스펙</label>
 		<div class="form-control" style="height:auto">${p.pr_spec}</div>
 	</div>
+	<!-- QNQ ---------------------------------------------------------------- -->
+	<div class="box-qna">
+		<h4>QNA</h4>
+		<!-- QNQ 목록 ---------------------------------------------------------------- -->
+		<table class="table table-hover">
+	    <thead>
+	      <tr>
+	        <th>Firstname</th>
+	        <th>Lastname</th>
+	        <th>Email</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr>
+	        <td>John</td>
+	        <td>Doe</td>
+	        <td>john@example.com</td>
+	      </tr>
+	      <tr>
+	        <td>Mary</td>
+	        <td>Moe</td>
+	        <td>mary@example.com</td>
+	      </tr>
+	      <tr>
+	        <td>July</td>
+	        <td>Dooley</td>
+	        <td>july@example.com</td>
+	      </tr>
+	    </tbody>
+	  </table>
+  <!-- 페이지네이션 ------------------------------------------------------------------------------------------- -->
+  <ul class="pagination justify-content-center">
+  	<li class="page-item <c:if test="${!pm.prev}">disabled</c:if>">
+  		<a class="page-link" href="<c:url value="/board/list?page=1&search=${pm.cri.search}&bd_type=${bd_type}"></c:url>">처음</a>
+ 		</li>
+ 	  <li class="page-item <c:if test="${!pm.prev}">disabled</c:if>">
+ 	  	<a class="page-link" href="<c:url value="/board/list?page=${pm.startPage-1}&search=${pm.cri.search}&bd_type=${bd_type}"></c:url>">이전</a>
+	  </li>  	
+  	<c:forEach begin="${pm.startPage}" end="${pm.endPage}" var="i">
+	  	<li class="page-item <c:if test="${pm.cri.page == i}">active</c:if>">
+  			<a class="page-link" href="<c:url value="/board/list?page=${i}&search=${pm.cri.search}&bd_type=${bd_type}"></c:url>">${i}</a>
+ 		</li>
+  	</c:forEach>
+ 	  <li class="page-item <c:if test="${!pm.next}">disabled</c:if>">
+ 	  	<a class="page-link" href="<c:url value="/board/list?page=${pm.endPage+1}&search=${pm.cri.search}&bd_type=${bd_type}"></c:url>">다음</a>
+	  </li>
+   	<li class="page-item" <c:if test="${!pm.next}">disabled</c:if>>
+   		<a class="page-link" href="<c:url value="/board/list?page=${pm.finalPage}&search=${pm.cri.search}&bd_type=${bd_type}"></c:url>">마지막</a>
+  	</li>
+  </ul>
+  <!-- QNA 등록 버튼 ------------------------------------------------------------------------------------------- -->
+  <a href="<c:url value="/board/insert?bd_type=QNA&bd_pr_code=${p.pr_code}"></c:url>" class="btn btn-outline-success">QNA 등록</a>
+	</div>
 </div>
 <!-- 스크립트 ---------------------------------------------------------------- -->
 <script type="text/javascript">
