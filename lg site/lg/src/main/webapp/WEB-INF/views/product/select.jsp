@@ -184,7 +184,7 @@ function createQNAList(list, target){
 		str +=   			'<span>'+b.bd_title+'</span>';
 		str +=  		'</a>';
 		str += 		'</td>';
-		str +=	  '<td>'+b.bd_me_email+'"</td>';
+		str +=	  '<td>'+b.bd_me_email+'</td>';
 		str +=	'</tr>';
 	}
 	$(target).html(str);

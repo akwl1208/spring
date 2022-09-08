@@ -34,8 +34,8 @@ public class BoardController {
 	public ModelAndView boardDelete(ModelAndView mv, Integer bd_num, String bd_type, 
 			HttpSession session, HttpServletResponse response) {
 		MemberVO user = (MemberVO)session.getAttribute("user");
+		String redirectUrl = boardService.getDeleteRedirectURL(bd_type, bd_num);
 		boolean res = boardService.deleteBoard(bd_num, user);
-		String redirectUrl = boardService.getDeleteRedirectURL(bd_type);
 		if(res)
 			messageService.message(response, "게시글이 삭제되었습니다.", redirectUrl);
 		else

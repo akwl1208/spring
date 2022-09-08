@@ -2,8 +2,6 @@ package kr.green.lg.service;
 
 import java.util.ArrayList;
 
-import javax.swing.filechooser.FileView;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,18 +58,22 @@ public class BoardServiceImp implements BoardService {
 		BoardVO dbBoard = boardDao.selectBoard(bd_num);
 		if(dbBoard == null)
 			return false;
-		if(user.getMe_authority() != 10 && dbBoard.getBd_me_email().equals(user.getMe_email()))
+		if(user.getMe_authority() != 10 && !dbBoard.getBd_me_email().equals(user.getMe_email()))
 			return false;
 		
 		return boardDao.deleteBoard(bd_num) == 1 ? true : false;
 	}
 	
 	@Override
-	public String getDeleteRedirectURL(String bd_type) {
+	public String getDeleteRedirectURL(String bd_type, Integer bd_num) {
 		if(bd_type.equals("NOTICE"))
 			return "/lg/admin/notice/list";
-		else if(bd_type.equals("QNA"))
-			return "";
+		else if(bd_type.equals("QNA")) {
+			BoardVO board = boardDao.selectBoard(bd_num);
+			if(board == null)
+				return "/lg/product/list";
+			return "/lg/product/select?pr_code="+board.getBd_pr_code();
+		}
 		return null;
 	}
 
