@@ -1,6 +1,8 @@
 package kr.green.lg.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -79,5 +82,19 @@ public class BoardController {
 		else
 			messageService.message(response, "게시글 등록에 실패했습니다.", "/lg/product/select?pr_code="+board.getBd_pr_code());
 		return mv;
+	}
+	/*----- ajax ------------------------------------------------------------------------*/
+	@RequestMapping(value = "/qna/list", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<Object, Object> qnaList(Criteria cri) {
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		ArrayList<BoardVO> qnaList = boardService.getBoardList(cri, "QNA");
+		
+		int totalCount = boardService.getTotalCount(cri, "QNA");
+		PageMaker pm = new PageMaker(totalCount, 5, cri);
+		
+		map.put("pm", pm);
+		map.put("list", qnaList);
+		return map;
 	}
 }

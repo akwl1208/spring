@@ -73,26 +73,18 @@
 		<table class="table table-hover">
 	    <thead>
 	      <tr>
-	        <th>Firstname</th>
-	        <th>Lastname</th>
-	        <th>Email</th>
+	        <th>제목</th>
+	        <th>작성자</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	      <tr>
-	        <td>John</td>
+	        <td class="box-qna">
+	        	<a href="<%=request.getContextPath()%>/board/select?bd_num=" class="link-qna" data-secret="1">
+		        	<i class="fa-solid fa-lock"></i><span>제목</span>
+	        	</a>
+        	</td>
 	        <td>Doe</td>
-	        <td>john@example.com</td>
-	      </tr>
-	      <tr>
-	        <td>Mary</td>
-	        <td>Moe</td>
-	        <td>mary@example.com</td>
-	      </tr>
-	      <tr>
-	        <td>July</td>
-	        <td>Dooley</td>
-	        <td>july@example.com</td>
 	      </tr>
 	    </tbody>
 	  </table>
@@ -122,7 +114,9 @@
 </div>
 <!-- 스크립트 ---------------------------------------------------------------- -->
 <script type="text/javascript">
+<!-- 이벤트 ---------------------------------------------------------------- -->
 $(function(){
+	<!-- 찜하기 클릭---------------------------------------------------------------- -->
 	$('.likes').click(function(){
 		let li_me_email = '${user.me_email}';
 		if(li_me_email == ''){
@@ -147,8 +141,81 @@ $(function(){
 				alert('잘못된 접근입니다.');
 			}
 		})
-	})	
+	})
+	<!-- QNA 제목 클릭 ---------------------------------------------------------------- -->
+	$(document).on('click', '.link-qna', function(e){
+		if($(this).data('secret') == 1 && $(this).parent().text() != '${user.me_email}'){
+			alert('비밀문의는 작성자와 관리자만 확인할 수 있습니다.');
+			e.preventDefault();
+		}
+	})
+	<!-- 페이지네이션 클릭 ---------------------------------------------------------------- -->
+	$(document).on('click', '.pagenation .page-link', function(){
+		if($(this).data('secret') == 1 && $(this).parent().text() != '${user.me_email}'){
+			cri.page = $(this).data('page');
+			loadQNA(cri);
+		}
+	})
+	loadQNA(cri);
 })
+<!-- 함수 ---------------------------------------------------------------- -->
+let page = 1;
+let cri = {
+	page : page,
+	perPageNum : 2,
+	search : '${p.pr_code}'
+}
+<!-- loadQNA ---------------------------------------------------------------- -->
+function loadQNA(cri){
+	ajaxPost(false, cri, '/qna/list', function(data){
+		createQNAList(data.list, '.box-qna tbody');
+		createPagenation(data.pm, '.pagination');
+	})
+}
+<!-- createQNAList ---------------------------------------------------------------- -->
+function createQNAList(list, target){
+	let str = '';
+	for(b of list){
+		str +=	'<tr>';
+		str += 		'<td class="box-qna">';
+		str +=  		'<a href="<%=request.getContextPath()%>/board/select?bd_num='+b.bd_num+'" class="link-qna" data-secret="'+b.bd_secret+'">';
+		if(b.bd_secret == '1')
+			str +=   			'<i class="fa-solid fa-lock"></i>';
+		str +=   			'<span>'+b.bd_title+'</span>';
+		str +=  		'</a>';
+		str += 		'</td>';
+		str +=	  '<td>'+b.bd_me_email+'"</td>';
+		str +=	'</tr>';
+	}
+	$(target).html(str);
+}
+<!-- createPagenation ---------------------------------------------------------------- -->
+function createPagenation(pm, target){
+	let str = '';
+	let prev = pm.prev ? '' : 'disabled';
+	
+	str +=	'<li class="page-item '+prev+'">';
+	str +=		'<a class="page-link" href="javascript:0;" data-page="1">처음</a>';
+	str +=	'</li>'
+	str +=  '<li class="page-item '+prev+'">';
+	str += 		'<a class="page-link" href="javascript:0;" data-page="'+(pm.startPage-1)+'">이전</a>';
+	str +=	'</li>';  	
+	for(i = pm.startPage; i<=pm.endPage; i++){
+		let active = pm.cri.page = i ? 'active' : '';
+		str +='<li class="page-item '+active+'">';
+		str +=	'<a class="page-link" href=href="javascript:0;" data-page="'+i+'">'+i+'</a>';
+		str +='</li>';
+	}
+	let next = pm.next ? '' : 'disabled'; 
+	str +=	'<li class="page-item '+next+'">';
+	str +=		'<a class="page-link" href="javascript:0;" data-page="'+(pm.endPage+1)+'">다음</a>';
+	str +=	'</li>'
+	str +=  '<li class="page-item '+prev+'">';
+	str += 		'<a class="page-link" href="javascript:0;" data-page="'+pm.finalPage+'">마지막</a>';
+	str +=	'</li>'; 
+	
+	$(target).html(str);
+}
 </script>	
 </body>
 </html>
